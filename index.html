@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orey Application</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 10;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 400px;
+    }
+
+    #movingText {
+      position: absolute;
+      white-space: nowrap;
+      animation: moveText 10s linear infinite;
+    }
+
+    @keyframes moveText {
+      0% {
+        left: 100%;
+      }
+
+      100% {
+        left: -100%;
+      }
+    }
+
+    form {
+      height: 560px;
+      width: 400px;
+      background-color: rgba(255, 255, 255, 0.13);
+      position: absolute;
+      transform: translate(-50%, -50%);
+      top: 50%;
+      left: 50%;
+      border-radius: 10px;
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+      padding: 50px 35px;
+    }
+
+    form * {
+      font-family: 'Poppins', sans-serif;
+      color: #fcf7f7;
+      letter-spacing: 0.5px;
+      outline: none;
+      border: none;
+    }
+
+    form h3 {
+      font-size: 32px;
+      font-weight: 500;
+      line-height: 42px;
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin-top: 30px;
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    input {
+      display: block;
+      height: 50px;
+      width: 100%;
+      background-color: rgba(11, 11, 11, 0.07);
+      border-radius: 3px;
+      padding: 0 10px;
+      margin-top: 8px;
+      font-size: 14px;
+      font-weight: 300;
+    }
+
+    ::placeholder {
+      color: #f0eded;
+    }
+
+    .btn {
+      margin-top: 50px;
+      width: 100%;
+      background-color: #0b0b0b;
+      color: #ebeaee;
+      padding: 15px 0;
+      font-size: 18px;
+      font-weight: 600;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .social {
+      margin-top: 30px;
+      display: flex;
+    }
+
+    .social div {
+      background: red;
+      width: 150px;
+      border-radius: 3px;
+      padding: 5px 10px 10px 5px;
+      background-color: rgb(68, 68, 68);
+      color: #eaf0fb;
+      text-align: center;
+    }
+
+    .social div:hover {
+      background-color: rgba(255, 255, 255, 0.47);
+    }
+
+    
+    #closeLogin {
+      color: red;
+    }
+
+    #closeSignup {
+      color: red;
+    }
+
+    #logo {
+      object-fit: cover;
+      mix-blend-mode: exclusion;
+
+    }
+
+    .container {
+      position: relative;
+      color: white;
+      /* Ensure the text is visible against the background */
+    }
+
+    .container #nasa {
+      max-width: 230%;
+      max-height: 90%;
+      width: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    .container .overlay-text {
+      position: absolute;
+      top: 30%;
+      left: 20%;
+      transform: translate(-50%, -50%);
+      font-size: 1rem;
+      /* Adjust size as needed */
+      font-weight: bold;
+      color: #ffffff;
+      /* Text color */
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      /* Add shadow for better readability */
+    }
+
+    .rotatingText {
+      align-items: center;
+      display: flex;
+      height: 100vh;
+      text-align: center;
+    }
+
+    .rotatingText-content {
+      position: relative;
+      width: 100%;
+    }
+
+    .rotatingText-description {
+      font-family: 'Georgia', serif;
+      font-style: italic;
+      font-size: 18px;
+      margin: 0;
+
+      @media (min-width: 768px) {
+        font-size: 18px;
+      }
+    }
+
+    .rotatingText-adjective {
+      font-family: 'Open Sans', sans-serif;
+      font-size: 8px;
+      left: 0;
+      margin-bottom: 0;
+      margin-top: 30px;
+      opacity: 0;
+      position: absolute;
+      right: 0;
+      text-align: center;
+      text-transform: uppercase;
+      top: 0;
+
+      @media (min-width: 768px) {
+        font-size: 20px;
+      }
+
+      &:nth-of-type(1) {
+        animation: rotate-text-up 1.5s .75s;
+      }
+
+      &:nth-of-type(2) {
+        animation: rotate-text-up 1.5s 2s;
+      }
+
+      &:nth-of-type(3) {
+        animation: fade-text-in 1.5s 3.25s forwards;
+      }
+    }
+
+    @keyframes rotate-text-up {
+      0% {
+        transform: translate3d(0, 80px, 0);
+        opacity: 0;
+      }
+
+      20%,
+      80% {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translate3d(0, -40px, 0);
+        opacity: 0;
+      }
+    }
+
+    @keyframes fade-text-in {
+      0% {
+        opacity: 0;
+        transform: translate3d(0, 80px, 0);
+      }
+
+      50%,
+      100% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+      }
+    }
+
+    nav {
+      background-image: url("src/img/bg.jpg");
+    }
+
+    nav {
+      background:
+        linear-gradient(rgba(0, 0, 0, 0.5),
+          /* Gradient color with opacity */
+          rgba(0, 0, 0, 0.5)
+          /* Gradient color with opacity */
+        ),
+        black;
+    }
+
+    #loginBtn {
+      background: none;
+      color: #ee0505;
+      font-family: monospace;
+      font-size: larger;
+      font-weight: bolder;
+      border: 3px solid rgb(20, 3, 82);
+      border-radius: 10px;
+      align-items: center;
+      margin-right: 20px;
+    }
+
+    #loginBtn:hover {
+      border: none;
+    }
+
+    .con {
+      background-color: black;
+    }
+
+    .info {
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    #gobtn{
+      background:black;
+      margin:auto;
+      cursor:pointer;
+      color:rgb(237, 231, 231);
+      font-weight: bolder;
+
+    }
+    i{
+      color:rgb(255, 12, 12);
+    }
+    .contact-link{
+      margin:10px
+    }
+    .p-6 {
+    padding: -22.5rem;
+}
+#open-chat{
+  border:2px solid white;
+}
+#open-chat:hover{
+  border:none;
+  background-color: #2c2c2c;
+}
+.chat-container {
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            background-color: rgb(0, 0, 0);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .chat-body {
+            overflow-y: auto;
+            flex: 1;
+            padding: 16px;
+            background-color: #0b0b0b;
+        }
+        .message {
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        .user-message {
+            /* background-color: #000000; */
+            color: rgb(255, 255, 255);
+            align-self: flex-end;
+            font-weight: bold;
+        }
+        .bot-message {
+            /* background-color: #000000; */
+            color: rgb(254, 254, 254);
+            align-self: flex-start;
+        }
+        .typing-animation::after {
+            content: '...';
+            display: inline-block;
+            animation: typing 1s infinite step-start;
+        }
+        @keyframes typing {
+            0% { content: '...'; }
+            50% { content: '.'; }
+            100% { content: ''; }
+        }
+        .hidden {
+            display: none;
+        }  
+        #user-input{
+          color:black;
+        }
+
+        .typing-container {
+    width: 100%;
+    overflow: hidden; /* Ensures the text stays within the container */
+    border-right: .15em solid #2980B9; /* The cursor effect */
+    white-space: nowrap; /* Keeps the text on one line */
+    margin: 0 auto; /* Centers the container */
+    letter-spacing: .15em; 
+    text-align: center;/* Spacing between characters */
+    animation: typing 4s steps(40, end), blink-caret .75s step-end infinite;
+
+}
+
+@keyframes typing {
+    from { width: 0; }
+    to { width: 100%; 
+    }
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent; }
+    50% { border-color:#2980B9; }
+
+}
+h1 {  
+            text-align: center;  
+            color: #0080ff;  
+        }  
+        .container {  
+            display: flex;  
+            flex-wrap: wrap;  
+            justify-content: center;  
+        }  
+        .fact {  
+            background-color: #0d0d0d;  
+            border-radius: 10px;  
+            padding: 20px;  
+            margin: 15px;  
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);  
+            width: 250px;  
+            transition: transform 0.2s;  
+            cursor: pointer;  
+            
+        }  
+        .fact:hover {  
+            transform: scale(1.05);  
+            border:1px solid  #1f4a75;
+        }  
+        .fact h2 {  
+            color: #2980B9;  
+        }  
+        .description {  
+            display: none;  
+            margin-top: 10px;  
+            color: #f1efef;  
+        }  
+        .show-more{
+            background-color:#2980B9;
+            color:rgb(214, 214, 214);
+            outline: none;
+            border:none;
+            padding:5px;
+            border-radius: 5px;
+            cursor:pointer;
+            margin: 20px;;
+            
+        }
+        .typing-container {
+    width: 100%;
+    overflow: hidden; /* Ensures the text stays within the container */
+    border-right: .15em solid #2980B9; /* The cursor effect */
+    white-space: nowrap; /* Keeps the text on one line */
+    margin: 0 auto; /* Centers the container */
+    letter-spacing: .15em; 
+    text-align: center;/* Spacing between characters */
+    animation: typing 4s steps(40, end), blink-caret .75s step-end infinite;
+
+}
+
+@keyframes typing {
+    from { width: 0; }
+    to { width: 100%; 
+    }
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent; }
+    50% { border-color:#2980B9; }
+
+}
+        </style>
+</head>
+
+<body class="bg-black relative text-white">
+  <nav class="flex justify-between items-center  shadow">
+    <div class="text-xl font-bold">
+      <img src="src/img/logo.gif" alt="Logo" class="h-20 w-40" id="logo">
+    </div>
+    <div>
+      <button id="loginBtn" class="bg-green-500 text-white px-4 py-2  h-10 w-40">Login</button>
+    </div>
+  </nav>
+  <hr>
+  <div class="container items-center justify-center h-screen relative">
+    <img src="src/img/h1.gif" alt="" id="nasa">
+    <div class="overlay-text">
+      <section class="rotatingText">
+        <div class="rotatingText-content">
+          <p class="rotatingText-description">
+            welcome to Neo&hellip;
+          </p>
+
+          <h2 class="rotatingText-adjective">Earth Information Center
+            <h2 class="rotatingText-adjective">maintainable</h2>
+            <h2 class="rotatingText-adjective">perfect 👌</h2>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Sign Up Modal -->
+  <div id="signupModal" class="modal">
+    <form id="sinForm">
+      <span id="closeSignup" class="float-right cursor-pointer">X</span>
+      <h3>Sign Up Here</h3>
+      <p style="color:rgb(255, 0, 0)" id="message"></p>
+      <label for="signup-username"><i class="fas fa-user"></i> Username</label>
+      <input type="text" placeholder="Email or Phone" id="signup-username">
+      <label for="signup-password"><i class="fas fa-lock"></i> Password</label>
+      <input type="password" placeholder="Password" id="signup-password">
+      <button type="button" id="sinbtn" class="btn">Create Account</button>
+      <p>Already have an account? <a href="#" id="loginLink" style="color:rgb(47, 0, 255);text-decoration:underline;">Login</a></p>
+    </form>
+  </div>
+
+  <!-- Login Modal -->
+  <div id="loginModal" class="modal">
+    <form id="loginForm">
+      <span id="closeLogin" class="float-right cursor-pointer">X</span>
+      <h3>Login Here</h3>
+      <p style="color:red" id="lomessage"></p>
+      <label for="login-username"><i class="fas fa-user"></i> Username</label>
+      <input type="text" placeholder="Email or Phone" id="login-username">
+      <label for="login-password"><i class="fas fa-lock"></i> Password</label>
+      <input type="password" placeholder="Password" id="login-password">
+      <button type="button" id="logBtn" class="btn">Login</button>
+      <div class="social">
+        <div class="go" id="gobtn"><i class="fab fa-google"></i> Google</div>
+        <!-- <div class="fb"><i class="fab fa-facebook"></i> Facebook</div> -->
+      </div>
+      <br>
+      <p>Not a Member <a href="#" id="signupLink" style="color:rgb(47, 5, 255);text-decoration:underline;">Sign Up</a></p>
+    </form>
+  </div>
+  <div class="conatiner">
+    <div class="typing-container">
+      <p class="typing-text"><h1>Interesting Facts about the Solar Planets</h1> </p>
+  </div>
+   
+  <div class="container">  
+      <div class="fact" onclick="toggleDescription(1)">  
+          <h2>Mercury</h2> 
+      
+          <p class="description" id="desc1">
+              <b> Temperatures:</b> Mercury experiences the most extreme temperature fluctuations in the solar system, ranging from about -173°C at night to 427°C during the day.
+          </p><b>No Atmosphere:</b> It has a very thin atmosphere, which means it cannot retain heat and has no weather.</p>  
+          <button class="show-more">Show More</button>
+      </div>  
+      <div class="fact" onclick="toggleDescription(2)">  
+          <h2>Venus</h2>  
+        
+          <p class="description" id="desc2">
+              <b> Hottest Planet:</b> Venus is the hottest planet in our solar system, with surface temperatures around 465°C (869°F) due to a thick atmosphere of carbon dioxide.
+          </p><b>Retrograde Rotation:</b> It rotates on its axis backward compared to most planets, meaning the Sun rises in the west and sets in the east</p>  
+          <button class="show-more">Show More</button>
+      </div>  
+      <div class="fact" onclick="toggleDescription(3)">  
+          <h2>Earth</h2>
+          <p class="description" id="desc3">
+              <b>Water World:</b> About 71% of Earth's surface is covered with water, making it unique in our solar system.
+          </p><b>Life-Supporting:</b> Earth is the only known planet to support life, owing to its protective atmosphere and presence of liquid water.</p>  
+          <button class="show-more">Show More</button>
+      </div>  
+      <div class="fact" onclick="toggleDescription(4)">  
+          <h2>Mars</h2> 
+          <p class="description" id="desc4">
+              <b>The Red Planet:</b> Mars is known as the Red Planet because of its iron oxide (rust) surface, which gives it a reddish appearance.
+          </p><b>Largest Volcano:</b> It is home to Olympus Mons, the largest volcano in the solar system, which is about 13.6 miles (22 km) high.</p>  
+          <button class="show-more">Show More</button>
+      </div>  
+      <div class="fact" onclick="toggleDescription(5)">  
+          <h2>Jupiter</h2>
+         
+          <p class="description" id="desc5">
+              <b>Largest Planet:</b>Jupiter is the largest planet in our solar system, more than 11 times the diameter of Earth.
+          </p> <b>Great Red Spot:</b> It has a giant storm known as the Great Red Spot, which is large enough to fit two or three Earths.</p>  
+          <button class="show-more">Show More</button>
+      </div>  
+      <div class="fact" onclick="toggleDescription(6)">  
+          <h2>Saturn</h2> 
+         
+          <p class="description" id="desc6">
+              <b> Beautiful Rings:</b> Saturn is famous for its stunning ring system, which is made up of ice and rock particles.
+          </p> <b>Lightweight:</b> Saturn is so light that it would float if placed in water; its density is lower than that of water.</p> 
+          <button class="show-more">Show More</button> 
+      </div>  
+      <div class="fact" onclick="toggleDescription(7)">  
+          <h2>Uranus</h2>
+        
+          <p class="description" id="desc7">
+              <b> Tilted Axis:</b> Uranus has a unique tilt of about 98 degrees, causing it to rotate on its side.
+          </p><b>Ice Giant:</b> It is classified as an ice giant, with a composition that includes water, ammonia, and methane in its atmosphere.</p>  
+          <button class="show-more">Show More</button>
+      </div>  
+      <div class="fact" onclick="toggleDescription(8)">  
+          <h2>Neptune</h2> 
+        
+          <p class="description" id="desc8">
+              <b>Farthest Planet:</b> Neptune is the farthest planet from the Sun and is known for its deep blue color due to methane in its atmosphere.
+          </p><b>Strong Winds:</b> It has the fastest winds in the solar system, reaching speeds of over 2,100 kilometers per hour (1,300 miles per hour).</p>  
+          <button class="show-more">Show More</button>
+      </div>  
+      <div class="fact" onclick="toggleDescription(9)">  
+          <h2>The Moon</h2>  
+          <p class="description" id="desc9">
+              <b>Tidal Effects:</b> The Moon's gravitational pull is responsible for the tides on Earth.
+          </p><b>No Atmosphere:</b> It has a very thin atmosphere, making it unable to support life and subjecting its surface to extreme temperatures.</p>  
+          <button class="show-more">Show More</button>
+      </div>  
+      <div class="fact" onclick="toggleDescription(10)">  
+          <h2>The Sun</h2> 
+          <p class="description" id="desc10">
+              <b> At the Center:</b> The Sun makes up about 99.86% of the mass of our solar system and is around 4.6 billion years old.
+          </p>  <p><b>Nuclear Fusion:</b>  It generates energy through nuclear fusion, converting hydrogen into helium in its core.</p> 
+              <button class="show-more">Show More</button>
+      </div>  
+      <div class="fact" onclick="toggleDescription(11)">  
+         <h2>Comets</h2>
+          <p class="description" id="desc11">
+              <b>Bodies:</b> Comets are composed of ice, dust, and rocky material, and are often referred to as "dirty snowballs.
+              <p><b>Tail Formation:</b> When comets approach the Sun, they develop vast tails made of gas and dust that can extend millions of kilometers due to solar wind.</p> </p> 
+              <button class="show-more">Show More</button>
+      </div>  
+  </div>  
+
+  <script>  
+      function toggleDescription(num) {
+  const desc = document.getElementById(`desc${num}`);
+  const showMoreButton = document.querySelector(`.fact:nth-child(${num}) button.show-more`);
+  if (desc.style.display === "none" || desc.style.display === "") {
+      desc.style.display = "block";
+      showMoreButton.textContent = "Show Less";
+  } else {
+      desc.style.display = "none";
+      showMoreButton.textContent = "Show More";
+  }
+}  
+  </script>
+  </div>
+  <div class="container-fluid mx-auto p-6">
+    <h1 class="text-3xl font-bold text-center mb-4">Contact Us</h1>
+    <p class="text-center mb-4">For inquiries, please reach out to us at <a href="mailto:info@example.com"
+        class="text-blue-500">sumitsachan995@gmail.com</a>.</p>
+<hr>
+    <h2 class="text-2xl font-semibold text-center mb-6">Our Contributors</h2>
+  
+    <div id="contributors" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Content will be dynamically added here -->
+  </div>
+  <hr>
+  </div>
+  <footer class="bg-body-secondary p-4 text-center">
+    <p>&copy; 2024 NEos Application. All rights reserved.</p>
+  </footer>
+  <script src="src/conti.js"></script>
+<script src="src/land.js"></script>
+  <script type="module">
+    
+    // Auto open signup modal after 5 seconds
+    // setTimeout(function() {
+    //     signupModal.style.display = "block";
+    // }, 5000);
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword,signInWithEmailAndPassword, GoogleAuthProvider,signInWithPopup} from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+    import { getDatabase,set,ref,update } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDv1WZjhweXeymFbZdTJ9tLucTal8qjJRI",
+      authDomain: "authentication-68f76.firebaseapp.com",
+      projectId: "authentication-68f76",
+      storageBucket: "authentication-68f76.appspot.com",
+      messagingSenderId: "177929748085",
+      appId: "1:177929748085:web:9f051c9926267ebd0b023c"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+    const database = getDatabase();
+    const provider = new GoogleAuthProvider();
+
+    document.getElementById('sinbtn').addEventListener('click', function (event) {
+      event.preventDefault();
+      const email = document.getElementById('signup-username').value;
+      const password = document.getElementById('signup-password').value;
+      const message=document.getElementById('message');
+      const sinForm=document.getElementById('sinForm');
+     createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          // Signed up 
+          const user = userCredential.user;
+          set(ref(database, 'users/' + user.uid), {
+    email: email,
+    password:password
+  })
+  .then(() => {
+  // Data saved successfully!
+    message.innerHTML="Account Created Successfully";
+
+})
+.catch((error) => {
+  // The write failed...
+});
+
+        
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          message.innerHTML=errorMessage;
+          sinForm.reset();
+         
+        });
+      });
+
+            document.getElementById('logBtn').addEventListener('click', function (event) {
+              event.preventDefault();
+  const email = document.getElementById('login-username').value;
+  const password = document.getElementById('login-password').value;
+  const message = document.getElementById('lomessage');
+  const loginModal = document.getElementById("loginModal");
+  const loginForm = document.getElementById('loginForm');
+  // Assuming message is the error display element
+
+  signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      // Signed in 
+      const user = userCredential.user;
+      let lgDate = new Date();  // Correcting variable name
+
+      // Update last_login in the database
+      update(ref(database, 'users/' + user.uid), {
+        last_login: lgDate // Correcting variable name
+      })
+      .then(() => {
+        // Data saved successfully!
+
+        // Close the modal if using Bootstrap modal
+        loginModal.style.display = 'none';
+        message.innerHTML="Login successfully";
+        window.location.href = "src/main.html";  // Redirect to the home page
+      })
+      .catch((error) => {
+        // Handle update error
+      });
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      message.innerHTML=errorMessage;
+      loginForm.reset();
+       // Display error message in the UI
+    });
+});
+document.getElementById('gobtn').addEventListener('click', function () {
+signInWithPopup(auth, provider)
+  .then((result) => {
+    // This gives you a Google Access Token. You can use it to access the Google API.
+    const credential = GoogleAuthProvider.credentialFromResult(result);
+    const token = credential.accessToken;
+    // The signed-in user info.
+    const user = result.user;
+    window.location.href="src/main.html";
+    // IdP data available using getAdditionalUserInfo(result)
+    // ...
+  }).catch((error) => {
+    // Handle Errors here.
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // The email of the user's account used.
+    const email = error.customData.email;
+    // The AuthCredential type that was used.
+    const credential = GoogleAuthProvider.credentialFromError(error);
+    // ...
+  });
+});
+  </script>
+
+<div id="chat-modal" class="fixed inset-0 flex items-center justify-center hidden">
+  <div class="chat-container w-full max-w-md">
+      <div class="bg-black text-white text-center py-3 relative">
+          <!-- <h2 class="text-lg font-semibold">AI Support</h2> -->
+          <div class="typing-container">
+            <p class="typing-text"><h1 class="text-lg font-semibold">AI Support</h1> </p>
+        </div>
+          <button id="close-chat" class="absolute top-2 right-2  text-white px-2 py-1 rounded-lg ">X</button>
+          <hr>
+      </div>
+      <div class="chat-body" id="chat-body">
+          <div class="message bot-message">Hello! How can I assist you today?</div>
+      </div>
+      <div class="bg-gray-100 p-4 flex items-center">
+          <input type="text" id="user-input" placeholder="Type your message..." autocomplete="off" class="flex-1 p-2 border border-gray-300 rounded-lg">
+          <button id="send-btn" class="ml-3 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Send</button>
+          <button id="clear-btn" class="ml-3 bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">Clear</button>
+      </div>
+  </div>
+</div>
+
+<!-- Open Chat Button -->
+<button id="open-chat" class="fixed bottom-4 right-4 bg-black text-white px-4 py-2 rounded-lg shadow-lg hover:bg-gray-500">
+  AI Support
+</button>
+
+  <script>
+        document.getElementById('open-chat').addEventListener('click', () => {
+            document.getElementById('chat-modal').classList.remove('hidden');
+        });
+
+        document.getElementById('close-chat').addEventListener('click', () => {
+            document.getElementById('chat-modal').classList.add('hidden');
+        });
+
+        document.getElementById('send-btn').addEventListener('click', sendMessage);
+        document.getElementById('clear-btn').addEventListener('click', clearChat);
+
+        async function sendMessage() {
+            const inputField = document.getElementById('user-input');
+            const userMessage = inputField.value.trim();
+            if (userMessage === '') return;
+
+            // Append user message to chat body
+            appendMessage(userMessage, 'user');
+
+            // Clear input field
+            inputField.value = '';
+
+            // Show typing animation
+            appendMessage('...', 'bot', true);
+
+            // Send user message to the Gemini API
+            const botResponse = await getBotResponse(userMessage);
+
+            // Remove typing animation and append actual bot message
+            const typingMessage = document.querySelector('#chat-body .typing-animation');
+            if (typingMessage) {
+                typingMessage.remove();
+            }
+            appendMessage(botResponse, 'bot');
+        }
+
+        function appendMessage(message, sender, isTyping = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', sender === 'user' ? 'user-message' : 'bot-message');
+            if (isTyping) {
+                messageDiv.classList.add('typing-animation');
+            } else {
+                messageDiv.innerText = message;
+            }
+            document.getElementById('chat-body').appendChild(messageDiv);
+
+            // Scroll to the bottom
+            const chatBody = document.getElementById('chat-body');
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        async function getBotResponse(message) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyBzilC4AgqHE57D8SklxayhrDH5lQQtOOc`;
+
+            const requestBody = {
+                "contents": [{
+                    "parts": [{
+                        "text": message
+                    }]
+                }]
+            };
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('Error Details:', errorData);
+                    return `Error: ${errorData.error.message || 'Something went wrong.'}`;
+                }
+
+                const data = await response.json();
+                console.log('API Response:', data);
+
+                // Extract text from the API response
+                if (data.candidates && data.candidates.length > 0 && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts.length > 0) {
+                    return data.candidates[0].content.parts[0].text || "Sorry, I couldn't understand that.";
+                } else {
+                    return "Sorry, I couldn't understand that.";
+                }
+            } catch (error) {
+                console.error('Fetch Error:', error);
+                return 'Oops! Something went wrong. Please try again.';
+            }
+        }
+
+        function clearChat() {
+            document.getElementById('chat-body').innerHTML = '';
+            appendMessage('Hello! How can I assist you today?', 'bot');
+        }
+    </script>
+</body>
+
+</html>
